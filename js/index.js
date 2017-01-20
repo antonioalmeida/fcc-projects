@@ -11,23 +11,13 @@ $(document).ready(function() {
 
     var getSearchResults = function(query) {
         console.log("I'm actually inside");
-        $.ajax({
-            url: 'https://en.wikipedia.org/w/api.php?action=opensearch&format=json&search=Portugal&namespace=&profile=fuzzy',
-            /*
-            action: 'opensearch',
-            format: 'json',
-            search: query,
-            namespace: '0',
-            profile: 'fuzzy',
-            */
-            headers: { 'Api-User-Agent': 'wikipedia-viewer (https://antonioalmedia.github.io/wikipedia-viewer/; theantonioalmeida@gmail.com) made for FreeCodeCamp' },
-            success: function(data) {
-                    console.log(data);
-            },
-            error: function(jqXHR, textStatus, errorThrown) {
-                console.log(errorThrown);
-            }
-        });
+        var callURL = "https://en.wikipedia.org/w/api.php?action=opensearch&format=json&namespace=&profile=fuzzy&search=" + query + "&callback=?";
 
+        $.getJSON(callURL, showData(data), callbackError);
     }
+
+    var showData = function(data) {
+        
+    }
+
 })
