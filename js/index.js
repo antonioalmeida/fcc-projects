@@ -1,7 +1,7 @@
 $(document).ready(function() {
     $("#search-button").click(function() {
         // Get input value and remove double whitespace
-        var searchQuery = $("#search-input").val().replace(/\s\s+/g, '\s');
+        var searchQuery = $("#search-input").val().replace(/\s\s+/g, '');
 
         if(searchQuery != undefined) {
             getSearchResults(searchQuery);
@@ -19,6 +19,12 @@ $(document).ready(function() {
 
             var size = data[1].length;
             var toAdd = "";
+
+            if(size == 0) {
+            toAdd = "<h4>No results were found for <i>" + data[0] + "</i>.</h4>";
+                $("#search-items").append(toAdd);
+                return;
+            }
 
             for(var i = 0; i < size; i++) {
                 toAdd+= "<h4>" + data[1][i] + "</h4>";
