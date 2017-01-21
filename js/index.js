@@ -27,9 +27,14 @@ $(document).ready(function() {
             }
 
             for(var i = 0; i < size; i++) {
+
+                var description = data[2][i];
+                if(description.length == 0)
+                    description = "<i>No description provided</i>";
+
                 toAdd+= "<h4>" + data[1][i] + "</h4>";
-                toAdd+= "<p>" + data[2][i] + "</p>";
-                toAdd+= "<a href=\"" + data[3][i] +"\"><button class=\"btn btn-info\">Go!</a></button><br><br>";
+                toAdd+= "<p>" + description + "</p>";
+                toAdd+= "<a href=\"" + data[3][i] +"\"><button class=\"btn btn-info\">Go!</button></a><br><br>";
             }
 
             $("#search-items").append(toAdd);
