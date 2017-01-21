@@ -12,22 +12,35 @@
 </head>
 
 <body>
-    <div class="container text-center">
-        <h1>Wikipedia Viewer</h1>
-        <!-- Random button -->
-        <a href="https://en.wikipedia.org/wiki/Special:Random"><button class="btn btn-info">Random Page</button></a>
-        <br>
-        <br>
-        <!-- Search bar -->
-        <div class="row">
-            <div class="col-md-4 col-md-offset-4 input-group">
-                <span class="input-group-btn">
-                    <button class="btn btn-default" id="search-button" type="button">Go!</button>
-                </span>
-                <input type="text" class="form-control" id ="search-input" placeholder="Search for..." required>
-            </div><!-- /search bar -->
+    <div class="container">
+        <div class="text-center">
+            <h1>Wikipedia Viewer</h1>
+            <!-- Random button -->
+            <a href="https://en.wikipedia.org/wiki/Special:Random"><button class="btn btn-info">Random Page</button></a>
+            <br>
+            <br>
+            <!-- Search bar -->
+            <div class="row">
+                <div class="col-md-4 col-md-offset-4 input-group">
+                    <span class="input-group-btn">
+                        <button class="btn btn-default" id="search-button" type="button">Go!</button>
+                    </span>
+                    <input type="text" class="form-control" id ="search-input" placeholder="Search for..." required>
+                </div><!-- /search bar -->
+
+            </div>
+        </div>
+
+        <div id="search-results">
+            <h1 id="search-title"></h1>
+
+            <div id="search-items">
+
+            </div>
+
 
         </div>
+
         <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js'></script>
 
         <script src="js/index.js"></script>

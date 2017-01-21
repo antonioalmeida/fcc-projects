@@ -6,6 +6,7 @@ $(document).ready(function() {
         if(searchQuery != undefined) {
             console.log("I'm in");
             getSearchResults(searchQuery);
+            $("search-items").empty();
         }
     })
 
@@ -13,11 +14,21 @@ $(document).ready(function() {
         console.log("I'm actually inside");
         var callURL = "https://en.wikipedia.org/w/api.php?action=opensearch&format=json&namespace=&profile=fuzzy&search=" + query + "&callback=?";
 
-        $.getJSON(callURL, showData(data), callbackError);
-    }
+        $.getJSON(callURL, function(data) {
+            console.log(data);
+            $("#search-title").html("<small>Search results for</small> " + data[0]);
 
-    var showData = function(data) {
-        
+            var size = data[1].length;
+            var toAdd = "";
+
+            for(var i = 0; i < size; i++) {
+                toAdd+= "<h4>" + data[1][i] + "</h4>";
+                toAdd+= "<p>" + data[2][i] + "</p>";
+                toAdd+= "<a href=\"" + data[3][i] +"\"><button class=\"btn btn-info\">Go!</a></button><br><br>";
+            }
+
+            $("#search-items").append(toAdd);
+        });
     }
 
 })
