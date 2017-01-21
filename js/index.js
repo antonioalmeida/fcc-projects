@@ -1,15 +1,15 @@
 $(document).ready(function() {
-    $("#search-button").click(function() {
+    $("#search-form").submit(function() {
+        event.preventDefault();
         // Get input value and remove double whitespace
         var searchQuery = $("#search-input").val().replace(/\s\s+/g, '');
 
-        if(searchQuery != undefined) {
+        if(searchQuery != undefined)
             getSearchResults(searchQuery);
-            $("#search-items").empty();
-        }
     })
 
     var getSearchResults = function(query) {
+        $("#search-items").empty();
         console.log("I'm actually inside");
         var callURL = "https://en.wikipedia.org/w/api.php?action=opensearch&format=json&namespace=&profile=fuzzy&search=" + query + "&callback=?";
 
