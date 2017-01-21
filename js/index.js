@@ -4,9 +4,8 @@ $(document).ready(function() {
         var searchQuery = $("#search-input").val().replace(/\s\s+/g, '\s');
 
         if(searchQuery != undefined) {
-            console.log("I'm in");
             getSearchResults(searchQuery);
-            $("search-items").empty();
+            $("#search-items").empty();
         }
     })
 
