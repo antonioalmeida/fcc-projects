@@ -1,0 +1,11 @@
+#icon {
+  font-size: 60px;
+}
+
+.unit:hover {
+	color: #00cdcd;
+}
+
+.unit {
+  color: orange;
+}
