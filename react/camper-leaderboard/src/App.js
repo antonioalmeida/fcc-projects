@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import $ from 'jquery';
-import logo from './logo.svg';
 import 'bootstrap/dist/css/bootstrap.css';
 import './App.css';
 
@@ -23,7 +22,7 @@ class CamperList extends React.Component {
 
     componentWillReceiveProps(nextProps) {
         const result = this.props.value.map((user, i) =>
-            <Camper value={user} index={i} />
+            <Camper value={user} index={i} key={i}/>
         );
 
         this.setState({result: result});
@@ -48,12 +47,22 @@ class Camper extends React.Component {
         };
     }
 
+    componentWillReceiveProps(nextProps) {
+        this.setState({
+            index: nextProps.index,
+            username: nextProps.value.username,
+            recent: nextProps.value.recent,
+            alltime: nextProps.value.alltime,
+        }
+    );
+}
 
     render() {
+        let link = 'https://freecodecamp.org/' + this.state.username;
         return (
             <tr>
                 <th>{this.state.index}</th>
-                <td>{this.state.username}</td>
+                <td><a href={link}>{this.state.username}</a></td>
                 <td>{this.state.recent}</td>
                 <td>{this.state.alltime}</td>
             </tr>
@@ -69,6 +78,9 @@ class App extends Component {
             campers: []
         };
 
+        this.sortByAllTime = this.sortByAllTime.bind(this);
+        this.sortByRecent = this.sortByRecent.bind(this);
+        this.sortByUsername = this.sortByUsername.bind(this);
     }
 
     componentDidMount() {
@@ -88,11 +100,68 @@ class App extends Component {
         });
     }
 
+    sortByUsername() {
+        let currentCampers = this.state.campers;
+
+        currentCampers.sort(function(a,b) {
+            var valueA = a.username;
+            var valueB = b.username;
+
+            if(valueA < valueB)
+                return -1;
+            if(valueA > valueB)
+                return 1;
+
+            return 0;
+        });
+
+        this.setState({campers: currentCampers});
+        this.forceUpdate();
+    }
+
+    sortByAllTime() {
+        let currentCampers = this.state.campers;
+
+        currentCampers.sort(function(a,b) {
+            var valueA = a.alltime;
+            var valueB = b.alltime;
+
+            if(valueA < valueB)
+                return 1;
+            if(valueA > valueB)
+                return -1;
+
+            return 0;
+        });
+
+        this.setState({campers: currentCampers});
+        this.forceUpdate();
+    }
+
+    sortByRecent() {
+        let currentCampers = this.state.campers;
+
+        currentCampers.sort(function(a,b) {
+            var valueA = a.recent;
+            var valueB = b.recent;
+
+            if(valueA < valueB)
+                return 1;
+            if(valueA > valueB)
+                return -1;
+
+            return 0;
+        });
+
+        this.setState({campers: currentCampers});
+        this.forceUpdate();
+    }
+
     render() {
         return (
             <div className="App">
                 <div className="App-header">
-                    <img src={logo} className="App-logo" alt="logo" />
+                    <img src='https://www.freecodecamp.com/design-style-guide/downloads/glyph.png' className="App-logo" alt="logo" />
                     <h2>Camper Leaderboard</h2>
                 </div>
                 <div className="container">
@@ -100,9 +169,9 @@ class App extends Component {
                         <thead>
                             <tr>
                                 <th>#</th>
-                                <th>Username</th>
-                                <th>Points in the last 30 days</th>
-                                <th>All time points</th>
+                                <th onClick={this.sortByUsername}><button type="button" className="btn btn-link">Username</button></th>
+                                <th onClick={this.sortByRecent}><button type="button" className="btn btn-link">Last 30 days points</button></th>
+                                <th onClick={this.sortByAllTime}><button type="button" className="btn btn-link">All time points</button></th>
                             </tr>
                         </thead>
                             <CamperList value={this.state.campers} />
