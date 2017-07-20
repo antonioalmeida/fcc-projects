@@ -4,67 +4,26 @@ import 'bootstrap/dist/css/bootstrap.css';
 import './App.css';
 
 class CamperList extends React.Component {
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            result: null,
-        }
-    }
-
-    componentDidMount() {
-        const result = this.props.value.map((user, i) =>
-            <Camper value={user} index={i} />
-        );
-
-        this.setState({result: result});
-    }
-
-    componentWillReceiveProps(nextProps) {
+    render() {
         const result = this.props.value.map((user, i) =>
             <Camper value={user} index={i} key={i}/>
         );
 
-        this.setState({result: result});
-    }
-
-    render() {
         return (<tbody>
-            {this.state.result}
+            {result}
         </tbody>);
     }
 }
 
 class Camper extends React.Component {
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            index: props.index,
-            username: props.value.username,
-            recent: props.value.recent,
-            alltime: props.value.alltime,
-        };
-    }
-
-    componentWillReceiveProps(nextProps) {
-        this.setState({
-            index: nextProps.index,
-            username: nextProps.value.username,
-            recent: nextProps.value.recent,
-            alltime: nextProps.value.alltime,
-        }
-    );
-}
-
     render() {
-        let link = 'https://freecodecamp.org/' + this.state.username;
+        let link = 'https://freecodecamp.org/' + this.props.username;
         return (
             <tr>
-                <th>{this.state.index}</th>
-                <td><a href={link}>{this.state.username}</a></td>
-                <td>{this.state.recent}</td>
-                <td>{this.state.alltime}</td>
+                <th>{this.props.index}</th>
+                <td><a href={link}>{this.props.value.username}</a></td>
+                <td>{this.props.value.recent}</td>
+                <td>{this.props.value.alltime}</td>
             </tr>
         )
     }
