@@ -16,12 +16,8 @@ class Recipe extends React.Component {
         this.props.onDelete(this.props.index);
     }
 
-    handleEditClick = (e) => {
-
-    }
-
     render() {
-        let ingredients = this.props.ingredients;
+        let ingredients = this.props.recipe.ingredients;
         const ingredientsList = ingredients.map((ingredient, index) => {
             return (
                 <li key={index}>{ingredient}</li>
@@ -33,8 +29,13 @@ class Recipe extends React.Component {
                 <ol>
                     {ingredientsList}
                 </ol>
-                <Button onClick={this.handleEditClick}>Edit</Button>
+                <Button onClick={()=>this.setState({ modalShow: true })}>Edit</Button>
                 <Button bsStyle="danger" onClick={this.handleDeleteClick}>Delete</Button>
+                <RecipeCreator show={this.state.modalShow}
+                    onHide={()=>this.setState({modalShow: false})}
+                    onSave={this.props.onEdit}
+                    recipe={this.props.recipe}
+                    index={this.props.index}/>
             </Tab.Pane>
         );
     }
@@ -43,26 +44,37 @@ class Recipe extends React.Component {
 class RecipeCreator extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {
-            name: '',
-            ingredients: '',
-        };
+
+        //Editing recipe
+        if(this.props.recipe) {
+            let ingredientsStr = this.props.recipe.ingredients.toString();
+            this.state = {
+                name: this.props.recipe.name,
+                ingredients: ingredientsStr,
+            }
+        }
+        else { //Creating new recipe
+            this.state = {
+                name: '',
+                ingredients: '',
+            };
+        }
     }
 
     getNameValidationState() {
         const length = this.state.name.length;
         if (length > 4)
-        return 'success';
+            return 'success';
         if (length > 0)
-        return 'error';
+            return 'error';
     }
 
     getIngredientsValidationState() {
         const length = this.state.ingredients.length;
         if (length > 4)
-        return 'success';
+            return 'success';
         if (length > 0)
-        return 'error';
+            return 'error';
     }
 
     handleNameChange = (e) => {
@@ -77,15 +89,16 @@ class RecipeCreator extends React.Component {
         e.preventDefault();
         const newRecipe = {
             name: this.state.name,
-            ingredients: this.state.ingredients.split(", "),
+            ingredients: this.state.ingredients.replace(/\s/g, '').split(","), //Remove spaces and transform string into array
         };
 
-        this.props.onSave(newRecipe);
+        this.props.onSave(newRecipe, this.props.index); //this.props.index is only used on editing recipe
+        this.props.onHide();
     }
 
     render() {
         return (
-            <Modal {...this.props}>
+            <Modal show={this.props.show} onHide={this.props.onHide}>
                 <Modal.Header>
                     <Modal.Title>Add new recipe</Modal.Title>
                 </Modal.Header>
@@ -129,6 +142,16 @@ class RecipeCreator extends React.Component {
 class App extends Component {
     constructor(props) {
         super(props);
+
+        //Browser has saved recipes
+        if(localStorage.recipes) {
+            var retrievedRecipes = JSON.parse(localStorage.getItem('recipes'));
+            this.state = {
+                recipes: retrievedRecipes,
+                modalShow: false,
+            }
+        }
+        else { //Initialize and save sample recipes
         this.state = {
             recipes: [
                 {name: 'Lasanha', ingredients: ['carne', 'massa', 'tomate']},
@@ -137,6 +160,16 @@ class App extends Component {
             ],
             modalShow: false,
         };
+        localStorage.setItem('recipes', JSON.stringify(this.state.recipes));
+    }
+}
+
+    handleEditRecipe = (newRecipe, recipeIndex)=>{
+        this.setState((prevState) => {
+            let tempRecipes = prevState.recipes;
+            tempRecipes.splice(recipeIndex, 1, newRecipe);
+            return {recipes: tempRecipes};
+        });
     }
 
     handleSaveRecipe = (newRecipe)=>{
@@ -149,7 +182,6 @@ class App extends Component {
     handleDeleteRecipe = (recipeIndex)=>{
         this.setState((prevState) => {
             let tempRecipes = prevState.recipes;
-            console.log(recipeIndex);
             tempRecipes.splice(recipeIndex, 1);
             return {recipes: tempRecipes};
         });
@@ -158,7 +190,8 @@ class App extends Component {
     render() {
         let currentRecipes = this.state.recipes;
         let recipesIngredients = currentRecipes.map((recipe, index) => {
-            return (<Recipe key={index} index={index} ingredients={recipe.ingredients} name={recipe.name} onDelete={this.handleDeleteRecipe}/>);
+            return (<Recipe key={index} index={index} recipe={recipe}
+                onDelete={this.handleDeleteRecipe} onEdit={this.handleEditRecipe}/>);
         });
 
         const recipesList = currentRecipes.map((recipe, index) => {
@@ -194,6 +227,11 @@ class App extends Component {
                 <RecipeCreator show={this.state.modalShow} onHide={()=>this.setState({modalShow: false})} onSave={this.handleSaveRecipe} />
             </div>
         );
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        //Update localStorage with current recipes
+        localStorage.setItem('recipes', JSON.stringify(this.state.recipes));
     }
 }
 
