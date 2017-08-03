@@ -153,9 +153,9 @@ class Recipe extends React.Component {
             else { //Initialize and save sample recipes
                 this.state = {
                     recipes: [
-                        {name: 'Lasanha', ingredients: ['carne', 'massa', 'tomate']},
-                        {name: 'Bacalhau à Brás', ingredients: ['bacalhau', 'molho bechamel', 'batata']},
-                        {name: 'Gelado de Banana', ingredients: ['chocolate', 'banana', 'gelado']}
+                        {name: 'Hamburguer Pie', ingredients: ['Potatoes', 'Beef', 'Pepper']},
+                        {name: 'Chicken Nuggets', ingredients: ['Bread', 'Mustard', 'Garlic', 'Chicken']},
+                        {name: 'Smoked Turkey Quiche', ingredients: ['Onion', 'Turkey', 'Mustard']}
                     ],
                     modalShow: false,
                 };
